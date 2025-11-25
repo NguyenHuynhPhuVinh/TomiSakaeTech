@@ -1,8 +1,10 @@
 import { useRouter } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { ref, onValue, push, set, remove } from "firebase/database";
 import { getDatabaseInstance } from "../../lib/firebaseConfig";
 import toast from "react-hot-toast";
+
+const ITEMS_PER_PAGE = 6;
 
 export function useNote() {
   const router = useRouter();
@@ -17,6 +19,8 @@ export function useNote() {
   }>({});
   const [deleteMode, setDeleteMode] = useState<string | null>(null);
   const [deleteCode, setDeleteCode] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -131,6 +135,32 @@ export function useNote() {
     }
   };
 
+  // Filtered notes based on search
+  const filteredNotes = useMemo(() => {
+    if (!searchQuery.trim()) return notes;
+    return notes.filter((note) =>
+      note.content.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [notes, searchQuery]);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredNotes.length / ITEMS_PER_PAGE);
+  const paginatedNotes = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredNotes.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredNotes, currentPage]);
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  // Reset to page 1 when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
   return {
     notes,
     setNotes,
@@ -150,5 +180,14 @@ export function useNote() {
     handleGoBack,
     toggleNoteExpansion,
     countLines,
+    // Pagination
+    currentPage,
+    totalPages,
+    paginatedNotes,
+    goToPage,
+    // Search
+    searchQuery,
+    setSearchQuery,
+    filteredNotes,
   };
 }
