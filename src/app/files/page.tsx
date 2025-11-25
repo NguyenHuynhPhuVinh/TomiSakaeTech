@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import gsap from "gsap";
 import { TechLayout, TechSidebar } from "@/components/layout";
 import {
@@ -10,6 +11,7 @@ import {
   HomeDropZone,
 } from "@/components/home";
 import { FilePreviewDialog } from "@/components/files/FilePreviewDialog";
+import { AdminLoginModal, AdminConfigModal } from "@/components/admin";
 import {
   ParticleField,
   TechBadge,
@@ -33,14 +35,35 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Toaster, toast } from "react-hot-toast";
 import useDrive from "@/components/hooks/drive";
-import { Menu, FolderPlus, Search, Sparkles, RefreshCw, Home } from "lucide-react";
+import { Menu, FolderPlus, Search, Sparkles, RefreshCw, Home, Settings } from "lucide-react";
 import Link from "next/link";
 
 export default function FilesPage() {
+  const searchParams = useSearchParams();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [previewFile, setPreviewFile] = useState<{ id: string; name: string } | null>(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showConfigModal, setShowConfigModal] = useState(false);
+  const [adminPassword, setAdminPassword] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Check for ?admin in URL
+  useEffect(() => {
+    if (searchParams.has("admin") && !isAdmin) {
+      setShowLoginModal(true);
+      // Remove ?admin from URL
+      const url = new URL(window.location.href);
+      url.searchParams.delete("admin");
+      window.history.replaceState({}, "", url.pathname);
+    }
+  }, [searchParams, isAdmin]);
+
+  const handleAdminLogin = (password: string) => {
+    setAdminPassword(password);
+    setIsAdmin(true);
+  };
 
   const {
     files,
@@ -190,7 +213,18 @@ export default function FilesPage() {
                   <RefreshCw className={`w-4 h-4 ${isReloading ? "animate-spin" : ""}`} />
                 </button>
               )}
-              <TechBadge variant="success" size="sm" pulse>ONLINE</TechBadge>
+              {isAdmin && (
+                <button
+                  onClick={() => setShowConfigModal(true)}
+                  className="p-2 text-[#00ff88] hover:bg-[#00ff88]/10 transition-colors border border-[#00ff88]/30"
+                  title="Admin Config"
+                >
+                  <Settings className="w-4 h-4" />
+                </button>
+              )}
+              <TechBadge variant={isAdmin ? "warning" : "success"} size="sm" pulse>
+                {isAdmin ? "ADMIN" : "ONLINE"}
+              </TechBadge>
             </div>
           </div>
         </header>
@@ -305,6 +339,18 @@ export default function FilesPage() {
             handleDownload(previewFile.id, previewFile.name);
           }
         }}
+      />
+
+      {/* Admin Modals */}
+      <AdminLoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onSuccess={handleAdminLogin}
+      />
+      <AdminConfigModal
+        isOpen={showConfigModal}
+        onClose={() => setShowConfigModal(false)}
+        adminPassword={adminPassword}
       />
 
       <Dialog open={isCreateFolderModalOpen} onOpenChange={(open) => { if (!isCreatingFolder) setIsCreateFolderModalOpen(open); }}>
