@@ -84,20 +84,41 @@ export default function Home() {
 
   useEffect(() => {
     if (!containerRef.current) return;
-    gsap.fromTo(
-      containerRef.current,
-      { opacity: 0 },
-      { opacity: 1, duration: 0.8, ease: "power2.out" }
-    );
+    
+    // Kill any existing animations
+    gsap.killTweensOf(containerRef.current);
+    
+    // Set initial state
+    gsap.set(containerRef.current, { opacity: 0 });
+    
+    // Animate with requestAnimationFrame for DOM ready
+    requestAnimationFrame(() => {
+      gsap.to(containerRef.current, { 
+        opacity: 1, 
+        duration: 0.8, 
+        ease: "power2.out" 
+      });
+    });
+
+    return () => {
+      if (containerRef.current) {
+        gsap.killTweensOf(containerRef.current);
+      }
+    };
   }, []);
 
   useEffect(() => {
     if (!cardsRef.current) return;
     const cardWidth = window.innerWidth;
+    
+    // Kill existing animation before starting new one
+    gsap.killTweensOf(cardsRef.current);
+    
     gsap.to(cardsRef.current, {
       x: -currentIndex * cardWidth,
       duration: 0.6,
       ease: "power3.out",
+      overwrite: "auto"
     });
   }, [currentIndex]);
 

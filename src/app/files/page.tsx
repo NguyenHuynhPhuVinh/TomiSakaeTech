@@ -115,9 +115,27 @@ export default function FilesPage() {
   useEffect(() => {
     if (!isLoading && gridRef.current && sortedFiles.length > 0) {
       const items = gridRef.current.querySelectorAll(".file-item");
-      // Reset opacity first then animate
-      gsap.set(items, { opacity: 1, y: 0 });
-      gsap.fromTo(items, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.02, ease: "power2.out" });
+      if (items.length === 0) return;
+      
+      // Kill any existing animations first
+      gsap.killTweensOf(items);
+      
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        gsap.set(items, { opacity: 1, y: 0 });
+        gsap.fromTo(
+          items, 
+          { opacity: 0, y: 10 }, 
+          { 
+            opacity: 1, 
+            y: 0, 
+            duration: 0.3, 
+            stagger: 0.02, 
+            ease: "power2.out",
+            overwrite: "auto"
+          }
+        );
+      });
     }
   }, [isLoading, sortedFiles, isGridView]);
 

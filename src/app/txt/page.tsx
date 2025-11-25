@@ -64,11 +64,27 @@ const TxtPage = () => {
   useEffect(() => {
     if (!loading && gridRef.current && paginatedNotes.length > 0) {
       const items = gridRef.current.querySelectorAll(".note-item");
-      gsap.fromTo(
-        items,
-        { opacity: 0.5, y: 10 },
-        { opacity: 1, y: 0, duration: 0.3, stagger: 0.03, ease: "power2.out" }
-      );
+      if (items.length === 0) return;
+      
+      // Kill any existing animations first
+      gsap.killTweensOf(items);
+      
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        gsap.set(items, { opacity: 1, y: 0 });
+        gsap.fromTo(
+          items,
+          { opacity: 0, y: 10 },
+          { 
+            opacity: 1, 
+            y: 0, 
+            duration: 0.3, 
+            stagger: 0.03, 
+            ease: "power2.out",
+            overwrite: "auto"
+          }
+        );
+      });
     }
   }, [loading, paginatedNotes, currentPage, viewMode]);
 
