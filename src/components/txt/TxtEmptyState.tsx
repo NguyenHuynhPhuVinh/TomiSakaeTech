@@ -30,7 +30,7 @@ export const TxtEmptyState: React.FC<TxtEmptyStateProps> = ({
     <div ref={containerRef} className="py-32 text-center relative">
       {/* Background decoration */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10">
-        <PulseRing color="#00ff88" size={300} rings={5} speed={4} />
+        <PulseRing color="#00d4ff" size={300} rings={5} speed={4} />
       </div>
 
       <div className="relative z-10">
@@ -48,8 +48,8 @@ export const TxtEmptyState: React.FC<TxtEmptyStateProps> = ({
           </>
         ) : (
           <>
-            <div className="w-20 h-20 mx-auto mb-6 border-2 border-[#00ff88]/30 flex items-center justify-center">
-              <CodeIcon size={32} className="text-[#00ff88]/50" />
+            <div className="w-20 h-20 mx-auto mb-6 border-2 border-[#00d4ff]/30 flex items-center justify-center">
+              <CodeIcon size={32} className="text-[#00d4ff]/50" />
             </div>
             <h3 className="text-lg font-mono text-muted-foreground mb-2">
               DATABASE_EMPTY
@@ -61,7 +61,7 @@ export const TxtEmptyState: React.FC<TxtEmptyStateProps> = ({
               variant="secondary"
               onClick={onCreateNew}
               icon={<Plus className="w-4 h-4" />}
-              className="border-[#00ff88] text-[#00ff88] hover:bg-[#00ff88] hover:text-black"
+              className="border-[#00d4ff] text-[#00d4ff] hover:bg-[#00d4ff] hover:text-black"
             >
               <span className="font-mono text-xs">CREATE_FIRST_NOTE</span>
             </TechButton>

@@ -11,7 +11,7 @@ import {
   PulseRing,
   NeonBorder,
 } from "@/components/ui/tech";
-import { HardDrive, FileText, Lock, ChevronLeft, ChevronRight, Folder, Database, Code } from "lucide-react";
+import { HardDrive, FileText, Lock, ChevronLeft, ChevronRight, Database } from "lucide-react";
 
 interface WorldCard {
   id: string;
@@ -177,10 +177,21 @@ export default function Home() {
                 <div
                   className={`relative border-2 p-8 transition-all duration-300 cursor-pointer group ${
                     world.status === "available"
-                      ? "border-current hover:shadow-[0_0_30px_rgba(0,255,136,0.3)]"
+                      ? "border-current"
                       : "border-muted-foreground/30 opacity-60"
                   }`}
-                  style={{ borderColor: world.status === "available" ? world.color : undefined }}
+                  style={{ 
+                    borderColor: world.status === "available" ? world.color : undefined,
+                    ['--shadow-color' as string]: world.color,
+                  }}
+                  onMouseEnter={(e) => {
+                    if (world.status === "available") {
+                      e.currentTarget.style.boxShadow = `0 0 30px ${world.color}4D`;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = '';
+                  }}
                   onClick={() => handleEnterWorld(world)}
                 >
                   {/* Corner accents */}
@@ -267,14 +278,33 @@ export default function Home() {
         <button
           onClick={handlePrev}
           disabled={currentIndex === 0}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-4 border border-border bg-background/80 backdrop-blur-sm disabled:opacity-20 disabled:cursor-not-allowed hover:border-[#00ff88] hover:text-[#00ff88] transition-colors"
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-4 border border-border bg-background/80 backdrop-blur-sm disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+          style={{ 
+            ['--hover-color' as string]: worlds[currentIndex].color 
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = worlds[currentIndex].color;
+            e.currentTarget.style.color = worlds[currentIndex].color;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = '';
+            e.currentTarget.style.color = '';
+          }}
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
         <button
           onClick={handleNext}
           disabled={currentIndex === worlds.length - 1}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-4 border border-border bg-background/80 backdrop-blur-sm disabled:opacity-20 disabled:cursor-not-allowed hover:border-[#00ff88] hover:text-[#00ff88] transition-colors"
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-4 border border-border bg-background/80 backdrop-blur-sm disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = worlds[currentIndex].color;
+            e.currentTarget.style.color = worlds[currentIndex].color;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = '';
+            e.currentTarget.style.color = '';
+          }}
         >
           <ChevronRight className="w-6 h-6" />
         </button>
@@ -287,9 +317,13 @@ export default function Home() {
               onClick={() => goToWorld(index)}
               className={`w-3 h-3 border transition-all ${
                 currentIndex === index
-                  ? "bg-[#00ff88] border-[#00ff88] scale-125"
+                  ? "scale-125"
                   : "border-muted-foreground hover:border-foreground"
               }`}
+              style={currentIndex === index ? { 
+                backgroundColor: world.color, 
+                borderColor: world.color 
+              } : undefined}
             />
           ))}
         </div>

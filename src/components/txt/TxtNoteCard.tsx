@@ -70,7 +70,7 @@ export const TxtNoteCard: React.FC<TxtNoteCardProps> = ({
 
   return (
     <div ref={cardRef} className="group">
-      <NeonBorder color="#00ff88" animated intensity="low" className="bg-card">
+      <NeonBorder color="#00d4ff" animated intensity="low" className="bg-card">
         <div className="p-5">
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
@@ -89,7 +89,7 @@ export const TxtNoteCard: React.FC<TxtNoteCardProps> = ({
 
           {/* Code content */}
           <div className="relative mb-4">
-            <div className="absolute top-0 left-0 w-8 border-r border-[#00ff88]/20 text-right pr-2 select-none">
+            <div className="absolute top-0 left-0 w-8 border-r border-[#00d4ff]/20 text-right pr-2 select-none">
               {content.split("\n").slice(0, isExpanded ? undefined : 8).map((_, i) => (
                 <div key={i} className="text-[10px] font-mono text-muted-foreground/50 leading-relaxed">
                   {i + 1}
@@ -121,7 +121,7 @@ export const TxtNoteCard: React.FC<TxtNoteCardProps> = ({
           {shouldTruncate && (
             <button
               onClick={onToggleExpand}
-              className="w-full flex items-center justify-center gap-2 py-2 text-[10px] font-mono text-[#00ff88] hover:bg-[#00ff88]/10 transition-colors border border-[#00ff88]/20"
+              className="w-full flex items-center justify-center gap-2 py-2 text-[10px] font-mono text-[#00d4ff] hover:bg-[#00d4ff]/10 transition-colors border border-[#00d4ff]/20"
             >
               {isExpanded ? (
                 <>
@@ -146,14 +146,14 @@ export const TxtNoteCard: React.FC<TxtNoteCardProps> = ({
             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
               <button
                 onClick={onCopy}
-                className="p-2 text-muted-foreground hover:text-[#00ff88] hover:bg-[#00ff88]/10 transition-all"
+                className="p-2 text-muted-foreground hover:text-[#00d4ff] hover:bg-[#00d4ff]/10 transition-all"
                 title="Copy"
               >
                 <Copy className="w-4 h-4" />
               </button>
               <button
                 onClick={onDownload}
-                className="p-2 text-muted-foreground hover:text-[#00ff88] hover:bg-[#00ff88]/10 transition-all"
+                className="p-2 text-muted-foreground hover:text-[#00d4ff] hover:bg-[#00d4ff]/10 transition-all"
                 title="Download"
               >
                 <Download className="w-4 h-4" />

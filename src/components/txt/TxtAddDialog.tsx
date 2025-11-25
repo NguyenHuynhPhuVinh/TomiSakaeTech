@@ -40,13 +40,13 @@ export const TxtAddDialog: React.FC<TxtAddDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-3xl border-[#00ff88]/30 rounded-none bg-background p-0 overflow-hidden">
+      <DialogContent className="sm:max-w-3xl border-[#00d4ff]/30 rounded-none bg-background p-0 overflow-hidden">
         {/* Header */}
-        <div className="border-b border-[#00ff88]/20 bg-[#00ff88]/5 px-6 py-4">
+        <div className="border-b border-[#00d4ff]/20 bg-[#00d4ff]/5 px-6 py-4">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-3 font-mono">
-              <div className="w-8 h-8 border border-[#00ff88] flex items-center justify-center">
-                <Terminal className="w-4 h-4 text-[#00ff88]" />
+              <div className="w-8 h-8 border border-[#00d4ff] flex items-center justify-center">
+                <Terminal className="w-4 h-4 text-[#00d4ff]" />
               </div>
               <span>NEW_NOTE</span>
               <TechBadge variant="success" size="sm" pulse>
@@ -58,10 +58,10 @@ export const TxtAddDialog: React.FC<TxtAddDialogProps> = ({
 
         {/* Editor */}
         <div className="p-6">
-          <NeonBorder color="#00ff88" intensity="low" className="bg-[#0d1117]">
+          <NeonBorder color="#00d4ff" intensity="low" className="bg-[#0d1117]">
             <div className="flex">
               {/* Line numbers */}
-              <div className="w-12 py-4 pr-2 text-right border-r border-[#00ff88]/20 select-none">
+              <div className="w-12 py-4 pr-2 text-right border-r border-[#00d4ff]/20 select-none">
                 {value.split("\n").map((_, i) => (
                   <div key={i} className="text-[11px] font-mono text-muted-foreground/40 leading-relaxed">
                     {i + 1}
@@ -96,7 +96,7 @@ export const TxtAddDialog: React.FC<TxtAddDialogProps> = ({
                 {charCount} CHARS
               </TechBadge>
             </div>
-            <WaveformVisualizer color="#00ff88" bars={8} height={20} active={value.length > 0} />
+            <WaveformVisualizer color="#00d4ff" bars={8} height={20} active={value.length > 0} />
           </div>
         </div>
 
@@ -116,7 +116,7 @@ export const TxtAddDialog: React.FC<TxtAddDialogProps> = ({
               onOpenChange(false);
             }}
             disabled={!value.trim()}
-            className="rounded-none font-mono text-xs bg-[#00ff88] text-black hover:bg-[#00ff88]/90 gap-2"
+            className="rounded-none font-mono text-xs bg-[#00d4ff] text-black hover:bg-[#00d4ff]/90 gap-2"
           >
             <Save className="w-4 h-4" />
             SAVE_NOTE

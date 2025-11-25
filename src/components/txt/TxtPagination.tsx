@@ -52,7 +52,7 @@ export const TxtPagination: React.FC<TxtPaginationProps> = ({
       <button
         onClick={() => onPageChange(1)}
         disabled={currentPage === 1}
-        className="p-2 text-muted-foreground hover:text-[#00ff88] hover:bg-[#00ff88]/10 disabled:opacity-30 disabled:pointer-events-none transition-all"
+        className="p-2 text-muted-foreground hover:text-[#00d4ff] hover:bg-[#00d4ff]/10 disabled:opacity-30 disabled:pointer-events-none transition-all"
         title="First page"
       >
         <ChevronsLeft className="w-4 h-4" />
@@ -62,7 +62,7 @@ export const TxtPagination: React.FC<TxtPaginationProps> = ({
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="p-2 text-muted-foreground hover:text-[#00ff88] hover:bg-[#00ff88]/10 disabled:opacity-30 disabled:pointer-events-none transition-all"
+        className="p-2 text-muted-foreground hover:text-[#00d4ff] hover:bg-[#00d4ff]/10 disabled:opacity-30 disabled:pointer-events-none transition-all"
         title="Previous page"
       >
         <ChevronLeft className="w-4 h-4" />
@@ -82,8 +82,8 @@ export const TxtPagination: React.FC<TxtPaginationProps> = ({
                 className={cn(
                   "w-10 h-10 text-xs font-mono transition-all",
                   currentPage === page
-                    ? "bg-[#00ff88] text-black font-bold"
-                    : "text-muted-foreground hover:text-[#00ff88] hover:bg-[#00ff88]/10"
+                    ? "bg-[#00d4ff] text-black font-bold"
+                    : "text-muted-foreground hover:text-[#00d4ff] hover:bg-[#00d4ff]/10"
                 )}
               >
                 {String(page).padStart(2, "0")}
@@ -97,7 +97,7 @@ export const TxtPagination: React.FC<TxtPaginationProps> = ({
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="p-2 text-muted-foreground hover:text-[#00ff88] hover:bg-[#00ff88]/10 disabled:opacity-30 disabled:pointer-events-none transition-all"
+        className="p-2 text-muted-foreground hover:text-[#00d4ff] hover:bg-[#00d4ff]/10 disabled:opacity-30 disabled:pointer-events-none transition-all"
         title="Next page"
       >
         <ChevronRight className="w-4 h-4" />
@@ -107,7 +107,7 @@ export const TxtPagination: React.FC<TxtPaginationProps> = ({
       <button
         onClick={() => onPageChange(totalPages)}
         disabled={currentPage === totalPages}
-        className="p-2 text-muted-foreground hover:text-[#00ff88] hover:bg-[#00ff88]/10 disabled:opacity-30 disabled:pointer-events-none transition-all"
+        className="p-2 text-muted-foreground hover:text-[#00d4ff] hover:bg-[#00d4ff]/10 disabled:opacity-30 disabled:pointer-events-none transition-all"
         title="Last page"
       >
         <ChevronsRight className="w-4 h-4" />

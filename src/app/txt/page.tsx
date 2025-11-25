@@ -13,7 +13,6 @@ import {
   RadarScan,
   LoadingDots,
   GlitchText,
-  TechBadge,
 } from "@/components/ui/tech";
 import {
   TxtToolbar,

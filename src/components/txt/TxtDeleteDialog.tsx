@@ -51,7 +51,7 @@ export const TxtDeleteDialog: React.FC<TxtDeleteDialogProps> = ({
         <div className="p-6">
           <p className="text-sm font-mono text-muted-foreground mb-6">
             This action cannot be undone. Type{" "}
-            <span className="text-[#00ff88] font-bold">XOA</span> to confirm deletion.
+            <span className="text-[#00d4ff] font-bold">XOA</span> to confirm deletion.
           </p>
 
           <NeonBorder color="#ff4444" intensity="low">
@@ -70,7 +70,7 @@ export const TxtDeleteDialog: React.FC<TxtDeleteDialogProps> = ({
             </p>
           )}
           {isValid && (
-            <p className="mt-3 text-[10px] font-mono text-[#00ff88] text-center">
+            <p className="mt-3 text-[10px] font-mono text-[#00d4ff] text-center">
               CODE_ACCEPTED - Ready to delete
             </p>
           )}

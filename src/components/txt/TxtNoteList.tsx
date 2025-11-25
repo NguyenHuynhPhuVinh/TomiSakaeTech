@@ -68,7 +68,7 @@ export const TxtNoteList: React.FC<TxtNoteListProps> = ({
         return (
           <article
             key={note.id}
-            className="list-item group hover:bg-[#00ff88]/5 transition-colors"
+            className="list-item group hover:bg-[#00d4ff]/5 transition-colors"
           >
             <div className="p-5">
               <div className="flex items-start gap-6">
@@ -101,7 +101,7 @@ export const TxtNoteList: React.FC<TxtNoteListProps> = ({
                   {shouldTruncate && (
                     <button
                       onClick={() => onToggleExpand(note.id)}
-                      className="mt-2 flex items-center gap-1 text-[10px] font-mono text-[#00ff88] hover:underline"
+                      className="mt-2 flex items-center gap-1 text-[10px] font-mono text-[#00d4ff] hover:underline"
                     >
                       {isExpanded ? (
                         <>
@@ -124,7 +124,7 @@ export const TxtNoteList: React.FC<TxtNoteListProps> = ({
                     <div className="text-[10px] font-mono text-muted-foreground">
                       {formatDate(note.timestamp)}
                     </div>
-                    <div className="text-[10px] font-mono text-[#00ff88]">
+                    <div className="text-[10px] font-mono text-[#00d4ff]">
                       {formatTime(note.timestamp)}
                     </div>
                   </div>
@@ -132,13 +132,13 @@ export const TxtNoteList: React.FC<TxtNoteListProps> = ({
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => onCopy(note.content)}
-                      className="p-1.5 text-muted-foreground hover:text-[#00ff88] transition-colors"
+                      className="p-1.5 text-muted-foreground hover:text-[#00d4ff] transition-colors"
                     >
                       <Copy className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => onDownload(note.content, note.timestamp)}
-                      className="p-1.5 text-muted-foreground hover:text-[#00ff88] transition-colors"
+                      className="p-1.5 text-muted-foreground hover:text-[#00d4ff] transition-colors"
                     >
                       <Download className="w-4 h-4" />
                     </button>
