@@ -1,7 +1,5 @@
 "use client";
 import React, { useEffect, useRef } from "react";
-import TextareaAutosize from "react-textarea-autosize";
-import gsap from "gsap";
 import { NeonBorder, TechBadge, WaveformVisualizer } from "@/components/ui/tech";
 import {
   Dialog,
@@ -29,6 +27,7 @@ export const TxtAddDialog: React.FC<TxtAddDialogProps> = ({
   onSave,
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
   const lineCount = value.split("\n").length;
   const charCount = value.length;
 
@@ -38,11 +37,22 @@ export const TxtAddDialog: React.FC<TxtAddDialogProps> = ({
     }
   }, [open]);
 
+  // Sync scroll giữa line numbers và textarea
+  const handleScroll = () => {
+    if (editorRef.current) {
+      const lineNumbers = editorRef.current.querySelector('.line-numbers') as HTMLElement;
+      const textarea = textareaRef.current;
+      if (lineNumbers && textarea) {
+        lineNumbers.scrollTop = textarea.scrollTop;
+      }
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-3xl border-[#00d4ff]/30 rounded-none bg-background p-0 overflow-hidden">
+      <DialogContent className="sm:max-w-3xl max-h-[90vh] border-[#00d4ff]/30 rounded-none bg-background p-0 overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="border-b border-[#00d4ff]/20 bg-[#00d4ff]/5 px-6 py-4">
+        <div className="shrink-0 border-b border-[#00d4ff]/20 bg-[#00d4ff]/5 px-6 py-4">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-3 font-mono">
               <div className="w-8 h-8 border border-[#00d4ff] flex items-center justify-center">
@@ -57,31 +67,31 @@ export const TxtAddDialog: React.FC<TxtAddDialogProps> = ({
         </div>
 
         {/* Editor */}
-        <div className="p-6">
+        <div className="flex-1 min-h-0 p-6 overflow-hidden">
           <NeonBorder color="#00d4ff" intensity="low" className="bg-[#0d1117]">
-            <div className="flex">
-              {/* Line numbers */}
-              <div className="w-12 py-4 pr-2 text-right border-r border-[#00d4ff]/20 select-none">
+            <div ref={editorRef} className="flex h-[50vh]">
+              {/* Line numbers - hidden scrollbar, synced with textarea */}
+              <div className="line-numbers w-12 py-4 pr-2 text-right border-r border-[#00d4ff]/20 select-none overflow-hidden">
                 {value.split("\n").map((_, i) => (
-                  <div key={i} className="text-[11px] font-mono text-muted-foreground/40 leading-relaxed">
+                  <div key={i} className="text-[11px] font-mono text-muted-foreground/40 leading-[1.7]">
                     {i + 1}
                   </div>
                 ))}
                 {value === "" && (
-                  <div className="text-[11px] font-mono text-muted-foreground/40 leading-relaxed">
+                  <div className="text-[11px] font-mono text-muted-foreground/40 leading-[1.7]">
                     1
                   </div>
                 )}
               </div>
               
-              {/* Textarea */}
-              <TextareaAutosize
+              {/* Textarea - single scrollbar */}
+              <textarea
                 ref={textareaRef}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
+                onScroll={handleScroll}
                 placeholder="// Paste your code, text or notes here..."
-                className="flex-1 min-h-[300px] p-4 bg-transparent text-sm font-mono leading-relaxed resize-none outline-none text-white placeholder:text-muted-foreground/30"
-                minRows={12}
+                className="flex-1 h-full p-4 bg-transparent text-sm font-mono leading-[1.7] resize-none outline-none text-white placeholder:text-muted-foreground/30 overflow-y-auto"
               />
             </div>
           </NeonBorder>
@@ -101,7 +111,7 @@ export const TxtAddDialog: React.FC<TxtAddDialogProps> = ({
         </div>
 
         {/* Footer */}
-        <DialogFooter className="border-t border-border px-6 py-4 gap-3">
+        <DialogFooter className="shrink-0 border-t border-border px-6 py-4 gap-3">
           <Button
             variant="ghost"
             onClick={() => onOpenChange(false)}

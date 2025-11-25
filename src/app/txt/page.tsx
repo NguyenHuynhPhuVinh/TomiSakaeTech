@@ -22,17 +22,22 @@ import {
   TxtEmptyState,
   TxtAddDialog,
   TxtDeleteDialog,
+  TxtViewDialog,
 } from "@/components/txt";
 import { Home, Plus, FileText } from "lucide-react";
 
 type ViewMode = "grid" | "list";
+
+interface ViewingNote {
+  note: { id: string; content: string; timestamp: number };
+  index: number;
+}
 
 const TxtPage = () => {
   const {
     newNote,
     setNewNote,
     loading,
-    expandedNotes,
     deleteMode,
     setDeleteMode,
     deleteCode,
@@ -40,7 +45,6 @@ const TxtPage = () => {
     handleAddNote,
     handleDeleteNote,
     handleCopy,
-    toggleNoteExpansion,
     currentPage,
     totalPages,
     paginatedNotes,
@@ -52,6 +56,7 @@ const TxtPage = () => {
 
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [showAddForm, setShowAddForm] = useState(false);
+  const [viewingNote, setViewingNote] = useState<ViewingNote | null>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -176,8 +181,8 @@ const TxtPage = () => {
             <TxtEmptyState isSearching={!!searchQuery} onCreateNew={() => setShowAddForm(true)} />
           ) : (
             <>
-              <div className="flex-1 overflow-y-auto">
-                {viewMode === "grid" ? (
+              {viewMode === "grid" ? (
+                <div className="flex-1 overflow-y-auto">
                   <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {paginatedNotes.map((note, index) => (
                       <div key={note.id} className="note-item">
@@ -186,8 +191,7 @@ const TxtPage = () => {
                           content={note.content}
                           timestamp={note.timestamp}
                           index={(currentPage - 1) * 6 + index + 1}
-                          isExpanded={expandedNotes[note.id] || false}
-                          onToggleExpand={() => toggleNoteExpansion(note.id)}
+                          onView={() => setViewingNote({ note, index: (currentPage - 1) * 6 + index + 1 })}
                           onCopy={() => handleCopy(note.content)}
                           onDownload={() => handleDownload(note.content, note.timestamp)}
                           onDelete={() => { setDeleteMode(note.id); setDeleteCode(""); }}
@@ -195,20 +199,19 @@ const TxtPage = () => {
                       </div>
                     ))}
                   </div>
-                ) : (
-                  <div ref={gridRef}>
-                    <TxtNoteList
-                      notes={paginatedNotes}
-                      expandedNotes={expandedNotes}
-                      currentPage={currentPage}
-                      onToggleExpand={toggleNoteExpansion}
-                      onCopy={handleCopy}
-                      onDownload={handleDownload}
-                      onDelete={(id) => { setDeleteMode(id); setDeleteCode(""); }}
-                    />
-                  </div>
-                )}
-              </div>
+                </div>
+              ) : (
+                <div ref={gridRef} className="flex-1 min-h-0 overflow-hidden">
+                  <TxtNoteList
+                    notes={paginatedNotes}
+                    currentPage={currentPage}
+                    onView={(note, idx) => setViewingNote({ note, index: idx })}
+                    onCopy={handleCopy}
+                    onDownload={handleDownload}
+                    onDelete={(id) => { setDeleteMode(id); setDeleteCode(""); }}
+                  />
+                </div>
+              )}
               <TxtPagination currentPage={currentPage} totalPages={totalPages} onPageChange={goToPage} />
             </>
           )}
@@ -218,6 +221,22 @@ const TxtPage = () => {
       </div>
 
       <TxtAddDialog open={showAddForm} onOpenChange={setShowAddForm} value={newNote} onChange={setNewNote} onSave={handleAddNote} />
+
+      <TxtViewDialog
+        open={viewingNote !== null}
+        onOpenChange={(open) => { if (!open) setViewingNote(null); }}
+        note={viewingNote?.note || null}
+        index={viewingNote?.index || 0}
+        onCopy={() => viewingNote && handleCopy(viewingNote.note.content)}
+        onDownload={() => viewingNote && handleDownload(viewingNote.note.content, viewingNote.note.timestamp)}
+        onDelete={() => {
+          if (viewingNote) {
+            setDeleteMode(viewingNote.note.id);
+            setDeleteCode("");
+            setViewingNote(null);
+          }
+        }}
+      />
 
       <TxtDeleteDialog
         open={deleteMode !== null}

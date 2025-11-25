@@ -3,35 +3,30 @@ import React, { useRef, useEffect } from "react";
 import gsap from "gsap";
 import hljs from "highlight.js";
 import { NeonBorder, TechBadge } from "@/components/ui/tech";
-import { Copy, Download, Trash2, ChevronDown, ChevronUp } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Copy, Download, Trash2, Maximize2 } from "lucide-react";
 
 interface TxtNoteCardProps {
   id: string;
   content: string;
   timestamp: number;
   index: number;
-  isExpanded: boolean;
-  onToggleExpand: () => void;
+  onView: () => void;
   onCopy: () => void;
   onDownload: () => void;
   onDelete: () => void;
 }
 
 export const TxtNoteCard: React.FC<TxtNoteCardProps> = ({
-  id,
   content,
   timestamp,
   index,
-  isExpanded,
-  onToggleExpand,
+  onView,
   onCopy,
   onDownload,
   onDelete,
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const lineCount = content.split("\n").length;
-  const shouldTruncate = lineCount > 8;
 
   const formatDate = (ts: number) => new Date(ts).toLocaleDateString("vi-VN");
   const formatTime = (ts: number) => new Date(ts).toLocaleTimeString("vi-VN", {
@@ -69,101 +64,68 @@ export const TxtNoteCard: React.FC<TxtNoteCardProps> = ({
   }, []);
 
   return (
-    <div ref={cardRef} className="group">
+    <div ref={cardRef} className="group cursor-pointer" onClick={onView}>
       <NeonBorder color="#00d4ff" animated intensity="low" className="bg-card">
-        <div className="p-5">
+        <div className="p-4">
           {/* Header */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <TechBadge variant="success" size="sm" pulse>
-                #{String(index).padStart(3, "0")}
-              </TechBadge>
-              <span className="text-[10px] font-mono text-muted-foreground">
-                {formatTime(timestamp)}
-              </span>
-            </div>
-            <TechBadge variant="default" size="sm">
-              {lineCount} LINES
+          <div className="flex items-center justify-between mb-3">
+            <TechBadge variant="success" size="sm" pulse>
+              #{String(index).padStart(3, "0")}
             </TechBadge>
+            <div className="flex items-center gap-2 text-[10px] font-mono text-muted-foreground">
+              <span>{formatTime(timestamp)}</span>
+              <span className="text-[#00d4ff]">{lineCount}L</span>
+            </div>
           </div>
 
-          {/* Code content */}
-          <div className="relative mb-4">
-            <div className="absolute top-0 left-0 w-8 border-r border-[#00d4ff]/20 text-right pr-2 select-none">
-              {content.split("\n").slice(0, isExpanded ? undefined : 8).map((_, i) => (
-                <div key={i} className="text-[10px] font-mono text-muted-foreground/50 leading-relaxed">
-                  {i + 1}
-                </div>
-              ))}
-            </div>
-            
-            <pre
-              className={cn(
-                "overflow-x-auto pl-10",
-                !isExpanded && shouldTruncate && "max-h-[200px] overflow-y-hidden"
-              )}
-            >
+          {/* Code preview */}
+          <div className="relative h-[100px] mb-3 overflow-hidden">
+            <pre className="overflow-hidden h-full">
               <code
-                className="hljs block p-4 text-[12px] leading-relaxed rounded-none bg-[#0d1117] font-mono"
+                className="hljs block p-3 text-[11px] leading-relaxed rounded-none bg-[#0d1117] font-mono h-full overflow-hidden"
                 dangerouslySetInnerHTML={{
                   __html: hljs.highlightAuto(content).value,
                 }}
               />
             </pre>
-
-            {/* Fade overlay */}
-            {shouldTruncate && !isExpanded && (
-              <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0d1117] to-transparent pointer-events-none" />
-            )}
+            <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#0d1117] to-transparent pointer-events-none" />
+            
+            {/* View hint on hover */}
+            <div className="absolute inset-0 bg-[#00d4ff]/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0d1117]/95 border border-[#00d4ff]/50 text-[10px] font-mono text-[#00d4ff]">
+                <Maximize2 className="w-3.5 h-3.5" />
+                VIEW
+              </div>
+            </div>
           </div>
 
-          {/* Expand button */}
-          {shouldTruncate && (
-            <button
-              onClick={onToggleExpand}
-              className="w-full flex items-center justify-center gap-2 py-2 text-[10px] font-mono text-[#00d4ff] hover:bg-[#00d4ff]/10 transition-colors border border-[#00d4ff]/20"
-            >
-              {isExpanded ? (
-                <>
-                  <ChevronUp className="w-3 h-3" />
-                  COLLAPSE
-                </>
-              ) : (
-                <>
-                  <ChevronDown className="w-3 h-3" />
-                  EXPAND ({lineCount - 8} MORE LINES)
-                </>
-              )}
-            </button>
-          )}
-
           {/* Footer */}
-          <div className="flex items-center justify-between pt-4 mt-4 border-t border-border">
+          <div className="flex items-center justify-between pt-3 border-t border-border/50">
             <span className="text-[10px] font-mono text-muted-foreground">
               {formatDate(timestamp)}
             </span>
             
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="flex items-center gap-1">
               <button
-                onClick={onCopy}
-                className="p-2 text-muted-foreground hover:text-[#00d4ff] hover:bg-[#00d4ff]/10 transition-all"
+                onClick={(e) => { e.stopPropagation(); onCopy(); }}
+                className="p-1.5 text-muted-foreground hover:text-[#00d4ff] transition-all"
                 title="Copy"
               >
-                <Copy className="w-4 h-4" />
+                <Copy className="w-3.5 h-3.5" />
               </button>
               <button
-                onClick={onDownload}
-                className="p-2 text-muted-foreground hover:text-[#00d4ff] hover:bg-[#00d4ff]/10 transition-all"
+                onClick={(e) => { e.stopPropagation(); onDownload(); }}
+                className="p-1.5 text-muted-foreground hover:text-[#00d4ff] transition-all"
                 title="Download"
               >
-                <Download className="w-4 h-4" />
+                <Download className="w-3.5 h-3.5" />
               </button>
               <button
-                onClick={onDelete}
-                className="p-2 text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-all"
+                onClick={(e) => { e.stopPropagation(); onDelete(); }}
+                className="p-1.5 text-muted-foreground hover:text-red-500 transition-all"
                 title="Delete"
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>

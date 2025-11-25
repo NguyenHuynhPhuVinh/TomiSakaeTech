@@ -7,3 +7,4 @@ export { TxtPagination } from "./TxtPagination";
 export { TxtEmptyState } from "./TxtEmptyState";
 export { TxtAddDialog } from "./TxtAddDialog";
 export { TxtDeleteDialog } from "./TxtDeleteDialog";
+export { TxtViewDialog } from "./TxtViewDialog";
