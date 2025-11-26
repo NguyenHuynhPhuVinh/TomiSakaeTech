@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -21,10 +21,18 @@ export function FileDeleteEffect({
   duration = 2500,
 }: FileDeleteEffectProps) {
   const [progress, setProgress] = useState(0);
+  const onCompleteRef = useRef(onComplete);
+  const hasCompletedRef = useRef(false);
+  
+  // Update ref when onComplete changes
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   useEffect(() => {
     if (!isDeleting) {
       setProgress(0);
+      hasCompletedRef.current = false;
       return;
     }
 
@@ -36,13 +44,14 @@ export function FileDeleteEffect({
 
       if (newProgress < 1) {
         requestAnimationFrame(animate);
-      } else {
-        onComplete?.();
+      } else if (!hasCompletedRef.current) {
+        hasCompletedRef.current = true;
+        onCompleteRef.current?.();
       }
     };
 
     requestAnimationFrame(animate);
-  }, [isDeleting, duration, onComplete]);
+  }, [isDeleting, duration]);
 
   // Tính toán cường độ glitch dựa trên progress
   // 0-30%: nhẹ, 30-70%: mạnh dần, 70-100%: cực mạnh + fade out

@@ -244,13 +244,13 @@ export default function Home() {
                     )}
 
                     {/* Status Badge */}
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <div className="absolute top-3 right-3">
                       <TechBadge
                         variant={world.status === "available" ? "success" : "warning"}
                         size="sm"
                         pulse={world.status === "available"}
                       >
-                        {world.status === "available" ? "ONLINE" : "OFFLINE"}
+                        {world.status === "available" ? "ACTIVE" : "LOCKED"}
                       </TechBadge>
                     </div>
                   </div>

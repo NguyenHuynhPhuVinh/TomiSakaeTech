@@ -87,7 +87,6 @@ export function useDriveQuery() {
     onSuccess: () => {
       toast.success("File đã bị xóa vĩnh viễn!");
       queryClient.invalidateQueries({ queryKey: ["files"] });
-      setDeletingFileId(null);
     },
     onError: () => {
       toast.error("Có lỗi xảy ra khi xóa file");
@@ -392,9 +391,13 @@ export function useDriveQuery() {
 
   const startDeleteEffect = (fileId: string) => setDeletingFileId(fileId);
 
-  const handleDeleteComplete = () => {
-    if (deletingFileId) deleteFileMutation.mutate(deletingFileId);
-  };
+  const handleDeleteComplete = useCallback(() => {
+    if (deletingFileId && !deleteFileMutation.isPending) {
+      const fileIdToDelete = deletingFileId;
+      setDeletingFileId(null); // Clear immediately to prevent double calls
+      deleteFileMutation.mutate(fileIdToDelete);
+    }
+  }, [deletingFileId, deleteFileMutation]);
 
   const handleDelete = (fileId: string) => deleteFileMutation.mutate(fileId);
 
