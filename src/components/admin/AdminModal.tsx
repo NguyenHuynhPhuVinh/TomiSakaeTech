@@ -15,7 +15,7 @@ import {
   LoadingDots,
 } from "@/components/ui/tech";
 import { Shield, X, Save, RefreshCw, Lock, Settings, Zap, Ban } from "lucide-react";
-import toast from "react-hot-toast";
+import { techToast } from "@/components/ui/tech";
 
 interface UploadConfig {
   maxUploadsPerMinute: number;
@@ -79,14 +79,14 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ isOpen, onClos
       });
       
       if (res.ok) {
-        toast.success("Đăng nhập thành công!");
+        techToast.success("Đăng nhập thành công!");
         onSuccess(password);
         onClose();
       } else {
-        toast.error("Mật khẩu không đúng");
+        techToast.error("Mật khẩu không đúng");
       }
     } catch {
-      toast.error("Lỗi kết nối");
+      techToast.error("Lỗi kết nối");
     } finally {
       setIsLoading(false);
     }
@@ -240,7 +240,7 @@ export const AdminConfigModal: React.FC<AdminConfigModalProps> = ({ isOpen, onCl
       setConfig(data);
       setBlockedText(data.blockedExtensions?.join("\n") || "");
     } catch {
-      toast.error("Không thể tải cấu hình");
+      techToast.error("Không thể tải cấu hình");
     }
   }, []);
 
@@ -280,14 +280,14 @@ export const AdminConfigModal: React.FC<AdminConfigModalProps> = ({ isOpen, onCl
       const data = await res.json();
 
       if (!res.ok) {
-        toast.error(data.error || "Lỗi khi lưu");
+        techToast.error(data.error || "Lỗi khi lưu");
         return;
       }
 
       setConfig(updatedConfig);
-      toast.success("Đã lưu cấu hình!");
+      techToast.success("Đã lưu cấu hình!");
     } catch {
-      toast.error("Lỗi kết nối server");
+      techToast.error("Lỗi kết nối server");
     } finally {
       setIsLoading(false);
     }

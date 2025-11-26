@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef } from "react";
-import { toast } from "react-hot-toast";
+import { techToast } from "@/components/ui/tech";
 import { motion } from "framer-motion";
 import { useFileList } from "@/hooks/useFileList";
 import { FileListProps } from "@/types";
@@ -358,7 +358,7 @@ export const TechFileList: React.FC<FileListProps> = ({
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   navigator.clipboard.writeText(generateDownloadLink(file.id));
-                                  toast.success("LINK_COPIED");
+                                  techToast.success("LINK_COPIED");
                                 }}
                                 className="text-xs"
                               >
@@ -471,7 +471,7 @@ export const TechFileList: React.FC<FileListProps> = ({
                               onClick={(e) => {
                                 e.stopPropagation();
                                 navigator.clipboard.writeText(generateDownloadLink(file.id));
-                                toast.success("LINK_COPIED");
+                                techToast.success("LINK_COPIED");
                               }}
                               className="text-xs"
                             >

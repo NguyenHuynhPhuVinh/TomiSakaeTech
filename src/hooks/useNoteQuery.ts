@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import { techToast } from "@/components/ui/tech";
 import { noteService, Note } from "../services/noteService";
 
 const ITEMS_PER_PAGE = 6;
@@ -33,10 +33,10 @@ export function useNoteQuery() {
     mutationFn: (content: string) => noteService.addNote(content),
     onSuccess: () => {
       setNewNote("");
-      toast.success("Đã thêm ghi chú!");
+      techToast.success("Đã thêm ghi chú!");
     },
     onError: () => {
-      toast.error("Lỗi khi thêm ghi chú");
+      techToast.error("Lỗi khi thêm ghi chú");
     },
   });
 
@@ -44,12 +44,12 @@ export function useNoteQuery() {
   const deleteNoteMutation = useMutation({
     mutationFn: (id: string) => noteService.deleteNote(id),
     onSuccess: () => {
-      toast.success("Đã xóa ghi chú!");
+      techToast.success("Đã xóa ghi chú!");
       setDeleteMode(null);
       setDeleteCode("");
     },
     onError: () => {
-      toast.error("Lỗi khi xóa ghi chú");
+      techToast.error("Lỗi khi xóa ghi chú");
     },
   });
 
@@ -61,7 +61,7 @@ export function useNoteQuery() {
 
   const handleDeleteNote = (id: string) => {
     if (deleteCode.trim().toUpperCase() !== "XOA") {
-      toast.error("Vui lòng nhập đúng mã xác nhận 'XOA'");
+      techToast.error("Vui lòng nhập đúng mã xác nhận 'XOA'");
       return;
     }
     deleteNoteMutation.mutate(id);
@@ -76,11 +76,7 @@ export function useNoteQuery() {
 
   const handleCopy = (content: string) => {
     navigator.clipboard.writeText(content);
-    toast.success("Đã sao chép ghi chú!", {
-      duration: 2000,
-      position: "bottom-right",
-      style: { background: "#333", color: "#fff" },
-    });
+    techToast.success("Đã sao chép ghi chú!");
   };
 
   const handleGoBack = () => router.push("/");

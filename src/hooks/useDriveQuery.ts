@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { techToast } from "@/components/ui/tech";
 import { GoogleGenAI } from "@google/genai";
 import { driveService } from "../services/driveService";
 import { FileItem } from "../types";
@@ -62,7 +62,7 @@ export function useDriveQuery() {
       driveService.createFolder(name, parentId),
     onSuccess: async (data) => {
       if (data.error) {
-        toast.error("Lỗi khi tạo thư mục");
+        techToast.error("Lỗi khi tạo thư mục");
         return;
       }
       setIsCreateFolderModalOpen(false);
@@ -78,7 +78,7 @@ export function useDriveQuery() {
       
       queryClient.invalidateQueries({ queryKey: ["files"] });
     },
-    onError: () => toast.error("Lỗi khi tạo thư mục"),
+    onError: () => techToast.error("Lỗi khi tạo thư mục"),
   });
 
   // Mutation: Delete file
@@ -86,11 +86,11 @@ export function useDriveQuery() {
     mutationFn: driveService.deleteFile,
     onSuccess: () => {
       setDeletingFileId(null);
-      toast.success("File đã bị xóa vĩnh viễn!");
+      techToast.success("File đã bị xóa vĩnh viễn!");
       queryClient.invalidateQueries({ queryKey: ["files"] });
     },
     onError: () => {
-      toast.error("Có lỗi xảy ra khi xóa file");
+      techToast.error("Có lỗi xảy ra khi xóa file");
       setDeletingFileId(null);
     },
   });
@@ -101,9 +101,9 @@ export function useDriveQuery() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["files"] });
       queryClient.invalidateQueries({ queryKey: ["driveInfo"] });
-      toast.success("Đã reload cache thành công!");
+      techToast.success("Đã reload cache thành công!");
     },
-    onError: () => toast.error("Có lỗi xảy ra khi reload cache"),
+    onError: () => techToast.error("Có lỗi xảy ra khi reload cache"),
   });
 
   const formatBytes = (bytes: number) => {
@@ -193,7 +193,7 @@ export function useDriveQuery() {
     } catch (error) {
       console.error("Lỗi khi upload files:", error);
       setUploadingFiles([]);
-      toast.error("Có lỗi xảy ra khi tải lên file");
+      techToast.error("Có lỗi xảy ra khi tải lên file");
     }
 
     event.target.value = "";
@@ -259,7 +259,7 @@ export function useDriveQuery() {
     } catch (error) {
       console.error("Lỗi:", error);
       setUploadingFiles([]);
-      toast.error("Có lỗi xảy ra khi tải lên thư mục");
+      techToast.error("Có lỗi xảy ra khi tải lên thư mục");
     }
 
     event.target.value = "";
@@ -291,7 +291,7 @@ export function useDriveQuery() {
       link.click();
       document.body.removeChild(link);
     } catch {
-      toast.error("Không thể tải file");
+      techToast.error("Không thể tải file");
     }
   };
 

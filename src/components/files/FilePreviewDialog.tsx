@@ -17,7 +17,7 @@ import {
 import { FileTechIcon } from "@/components/icons/TechIcons";
 import { Download, ExternalLink, Copy, Check } from "lucide-react";
 import Image from "next/image";
-import { toast } from "react-hot-toast";
+import { techToast } from "@/components/ui/tech";
 
 interface FilePreviewDialogProps {
   isOpen: boolean;
@@ -83,7 +83,7 @@ export const FilePreviewDialog: React.FC<FilePreviewDialogProps> = ({
     if (previewData?.content) {
       navigator.clipboard.writeText(previewData.content);
       setCopied(true);
-      toast.success("CONTENT_COPIED");
+      techToast.success("CONTENT_COPIED");
       setTimeout(() => setCopied(false), 2000);
     }
   };

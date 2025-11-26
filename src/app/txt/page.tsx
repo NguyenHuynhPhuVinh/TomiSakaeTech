@@ -1,8 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import "highlight.js/styles/github-dark.css";
-import { Toaster } from "react-hot-toast";
-import toast from "react-hot-toast";
+import { techToast } from "@/components/ui/tech";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useNoteQuery } from "@/hooks/useNoteQuery";
@@ -93,7 +92,7 @@ const TxtPage = () => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    toast.success("DOWNLOADED");
+    techToast.success("DOWNLOADED");
   };
 
   const handleDownloadAll = () => {
@@ -110,7 +109,7 @@ const TxtPage = () => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    toast.success(`EXPORTED_${filteredNotes.length}_NOTES`);
+    techToast.success(`EXPORTED_${filteredNotes.length}_NOTES`);
   };
 
   return (
@@ -260,12 +259,7 @@ const TxtPage = () => {
         onConfirm={() => handleDeleteNote(deleteMode!)}
       />
 
-      <Toaster
-        position="bottom-center"
-        toastOptions={{
-          style: { background: "#00d4ff", color: "#000", borderRadius: 0, fontSize: "11px", fontFamily: "monospace", fontWeight: "bold" },
-        }}
-      />
+
     </TechLayout>
   );
 };

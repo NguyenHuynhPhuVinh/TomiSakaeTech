@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { FileItem, FileListProps } from "../types";
 import { driveService } from "../services/driveService";
 import JSZip from "jszip";
-import { toast } from "react-hot-toast";
+import { techToast } from "@/components/ui/tech";
 
 function formatFileSize(bytes: number): string {
   if (!bytes) return "0 B";
@@ -274,7 +274,7 @@ export const useFileList = ({
       URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Lỗi khi tải thư mục:", error);
-      toast.error("Có lỗi xảy ra khi tải thư mục");
+      techToast.error("Có lỗi xảy ra khi tải thư mục");
     } finally {
       setCompressingFolder(null);
       setCompressionProgress(0);
@@ -300,12 +300,12 @@ export const useFileList = ({
       if (!isValid) throw new Error("Mật khẩu không đúng");
 
       await onDelete(fileToDelete.id);
-      toast.success("Đã xóa thành công!");
+      techToast.success("Đã xóa thành công!");
       setShowDeleteModal(false);
       setDeletePassword("");
       setFileToDelete(null);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Có lỗi xảy ra");
+      techToast.error(error instanceof Error ? error.message : "Có lỗi xảy ra");
     } finally {
       setIsDeleting(false);
     }

@@ -39,3 +39,4 @@ export { VoidText } from "./VoidText";
 export { VoidZone } from "./VoidZone";
 export { LightningUploadProgress } from "./LightningUploadProgress";
 export { FileDeleteEffect, useFileDeleteEffect } from "./FileDeleteEffect";
+export { TechToastContainer, techToast } from "./TechToast";
