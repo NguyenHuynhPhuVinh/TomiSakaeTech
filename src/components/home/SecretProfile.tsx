@@ -30,26 +30,21 @@ export const SecretProfile: React.FC<SecretProfileProps> = ({ onBack }) => {
     <motion.div
       initial={{ 
         opacity: 0, 
-        scale: 0.1,
-        x: "80%",
-        y: "80%",
+        scale: 0.95,
       }}
       animate={{ 
         opacity: 1, 
         scale: 1,
-        x: "0%",
-        y: "0%",
       }}
       exit={{ 
         opacity: 0,
-        scale: 0.5,
+        scale: 0.95,
       }}
       transition={{ 
-        duration: 0.5, 
-        ease: [0.34, 1.56, 0.64, 1],
+        duration: 0.4, 
+        ease: "easeOut",
       }}
       className="fixed inset-0 z-[60] bg-black overflow-hidden"
-      style={{ transformOrigin: "bottom right" }}
     >
       {/* Background */}
       <div className="absolute inset-0">
