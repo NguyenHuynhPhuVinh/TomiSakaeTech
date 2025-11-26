@@ -1,11 +1,11 @@
 "use client";
 import React, { useRef } from "react";
 import { toast } from "react-hot-toast";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useFileList } from "@/hooks/useFileList";
 import { FileListProps } from "@/types";
 import { TechCard, TechProgress } from "@/components/ui/tech";
-import { FolderTechIcon, FileTechIcon, UploadTechIcon, DownloadTechIcon } from "@/components/icons/TechIcons";
+import { FolderTechIcon, FileTechIcon, UploadTechIcon } from "@/components/icons/TechIcons";
 import {
   DropdownMenu,
   DropdownMenuContent,
