@@ -1,11 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/shared/components/ui/dialog";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/shared/components/ui/button";
 import {
   GlitchText,
@@ -15,7 +10,7 @@ import {
   PulseRing,
 } from "@/shared/components/tech";
 import { FileTechIcon } from "@/shared/components/icons/TechIcons";
-import { Download, ExternalLink, Copy, Check } from "lucide-react";
+import { Download, ExternalLink, Copy, Check, X } from "lucide-react";
 import Image from "next/image";
 import { techToast } from "@/shared/components/tech";
 
@@ -102,7 +97,9 @@ export const FilePreviewDialog: React.FC<FilePreviewDialogProps> = ({
           <PulseRing color="#00ff88" size={60} rings={3} />
           <div className="flex items-center gap-2 mt-4">
             <LoadingDots color="#00ff88" size={6} />
-            <span className="text-xs font-mono text-muted-foreground">LOADING_PREVIEW</span>
+            <span className="text-xs font-mono text-muted-foreground">
+              LOADING_PREVIEW
+            </span>
           </div>
         </div>
       );
@@ -115,7 +112,11 @@ export const FilePreviewDialog: React.FC<FilePreviewDialogProps> = ({
           <p className="text-sm font-mono text-muted-foreground mb-2">
             {previewData?.error || "PREVIEW_UNAVAILABLE"}
           </p>
-          <Button onClick={onDownload} variant="outline" className="rounded-none font-mono text-xs mt-4">
+          <Button
+            onClick={onDownload}
+            variant="outline"
+            className="rounded-none font-mono text-xs mt-4"
+          >
             <Download className="w-4 h-4 mr-2" />
             DOWNLOAD_FILE
           </Button>
@@ -134,7 +135,11 @@ export const FilePreviewDialog: React.FC<FilePreviewDialogProps> = ({
                 onClick={handleCopyContent}
                 className="h-8 px-2 font-mono text-xs"
               >
-                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                {copied ? (
+                  <Check className="w-4 h-4" />
+                ) : (
+                  <Copy className="w-4 h-4" />
+                )}
               </Button>
             </div>
             <NeonBorder color="#00ff88" intensity="low">
@@ -176,7 +181,11 @@ export const FilePreviewDialog: React.FC<FilePreviewDialogProps> = ({
         return (
           <div className="p-8 flex flex-col items-center">
             <FileTechIcon size={64} className="text-[#00ff88] mb-6" />
-            <audio controls className="w-full max-w-md" src={previewData.streamUrl || ""}>
+            <audio
+              controls
+              className="w-full max-w-md"
+              src={previewData.streamUrl || ""}
+            >
               Your browser does not support audio playback.
             </audio>
           </div>
@@ -203,7 +212,11 @@ export const FilePreviewDialog: React.FC<FilePreviewDialogProps> = ({
             <p className="text-xs font-mono text-muted-foreground/60 mb-4">
               {previewData.mimeType}
             </p>
-            <Button onClick={onDownload} variant="outline" className="rounded-none font-mono text-xs">
+            <Button
+              onClick={onDownload}
+              variant="outline"
+              className="rounded-none font-mono text-xs"
+            >
               <Download className="w-4 h-4 mr-2" />
               DOWNLOAD_FILE
             </Button>
@@ -213,66 +226,163 @@ export const FilePreviewDialog: React.FC<FilePreviewDialogProps> = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-hidden rounded-none border-[#00ff88]/30 bg-background p-0">
-        {/* Header */}
-        <div className="border-b border-[#00ff88]/20 bg-[#00ff88]/5 px-6 py-4">
-          <DialogHeader>
-            <DialogTitle className="flex items-center justify-between font-mono">
-              <div className="flex items-center gap-3 min-w-0 flex-1">
-                <FileTechIcon size={24} className="text-[#00ff88] shrink-0" />
-                <GlitchText intensity="low" className="truncate">
-                  {fileName}
-                </GlitchText>
-              </div>
-              <div className="flex items-center gap-2 shrink-0 ml-4">
-                {previewData?.size && (
-                  <TechBadge variant="default" size="sm">
-                    {formatFileSize(previewData.size)}
-                  </TechBadge>
-                )}
-                {previewData?.mimeType && (
-                  <TechBadge variant="info" size="sm">
-                    {previewData.mimeType.split("/").pop()?.toUpperCase()}
-                  </TechBadge>
-                )}
-              </div>
-            </DialogTitle>
-          </DialogHeader>
-        </div>
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm"
+            onClick={onClose}
+          />
 
-        {/* Content */}
-        <div className="overflow-auto">{renderPreview()}</div>
+          {/* Dialog */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: 0,
+              transition: {
+                type: "spring",
+                damping: 25,
+                stiffness: 300,
+              },
+            }}
+            exit={{
+              opacity: 0,
+              scale: 0.95,
+              y: -10,
+              transition: { duration: 0.15 },
+            }}
+            className="fixed left-1/2 top-1/2 z-50 w-[95vw] max-w-4xl max-h-[90vh] -translate-x-1/2 -translate-y-1/2 flex flex-col"
+          >
+            <div className="relative border border-[#00ff88]/40 bg-black/95 overflow-hidden shadow-[0_0_50px_rgba(0,255,136,0.2)] flex flex-col max-h-[90vh]">
+              {/* Glitch lines effect */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,255,136,0.02)_50%)] bg-[length:100%_4px]" />
+              </div>
 
-        {/* Footer */}
-        <div className="border-t border-border px-6 py-3 flex items-center justify-between bg-muted/20">
-          <div className="text-[10px] font-mono text-muted-foreground">
-            FILE_ID: {fileId.slice(0, 12)}...
-          </div>
-          <div className="flex items-center gap-2">
-            {previewData?.downloadUrl && (
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => window.open(previewData.downloadUrl, "_blank")}
-                className="h-8 rounded-none font-mono text-xs"
+              {/* Corner accents */}
+              <motion.div
+                initial={{ width: 0, height: 0 }}
+                animate={{ width: 24, height: 24 }}
+                transition={{ delay: 0.1, duration: 0.2 }}
+                className="absolute top-0 left-0 border-t-2 border-l-2 border-[#00ff88]"
+              />
+              <motion.div
+                initial={{ width: 0, height: 0 }}
+                animate={{ width: 24, height: 24 }}
+                transition={{ delay: 0.15, duration: 0.2 }}
+                className="absolute top-0 right-0 border-t-2 border-r-2 border-[#00ff88]"
+              />
+              <motion.div
+                initial={{ width: 0, height: 0 }}
+                animate={{ width: 24, height: 24 }}
+                transition={{ delay: 0.2, duration: 0.2 }}
+                className="absolute bottom-0 left-0 border-b-2 border-l-2 border-[#00ff88]"
+              />
+              <motion.div
+                initial={{ width: 0, height: 0 }}
+                animate={{ width: 24, height: 24 }}
+                transition={{ delay: 0.25, duration: 0.2 }}
+                className="absolute bottom-0 right-0 border-b-2 border-r-2 border-[#00ff88]"
+              />
+
+              {/* Close button */}
+              <button
+                onClick={onClose}
+                className="absolute right-4 top-4 z-20 p-1 text-[#00ff88]/60 hover:text-[#00ff88] transition-colors"
               >
-                <ExternalLink className="w-4 h-4 mr-2" />
-                OPEN
-              </Button>
-            )}
-            <Button
-              size="sm"
-              onClick={onDownload}
-              className="h-8 rounded-none font-mono text-xs bg-[#00ff88] text-black hover:bg-[#00ff88]/90"
-            >
-              <Download className="w-4 h-4 mr-2" />
-              DOWNLOAD
-            </Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+                <X className="w-4 h-4" />
+              </button>
+
+              {/* Header */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 }}
+                className="border-b border-[#00ff88]/20 bg-[#00ff88]/5 px-6 py-4 shrink-0"
+              >
+                <div className="flex items-center justify-between font-mono relative">
+                  <div className="flex items-center gap-3 min-w-0 flex-1 pr-8">
+                    <div className="relative shrink-0">
+                      <FileTechIcon size={24} className="text-[#00ff88]" />
+                      <motion.div
+                        animate={{ opacity: [1, 0.5, 1] }}
+                        transition={{ duration: 1, repeat: Infinity }}
+                        className="absolute -top-1 -right-1 w-2 h-2 bg-[#00ff88]"
+                      />
+                    </div>
+                    <GlitchText intensity="low" className="truncate">
+                      {fileName}
+                    </GlitchText>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {previewData?.size && (
+                      <TechBadge variant="default" size="sm">
+                        {formatFileSize(previewData.size)}
+                      </TechBadge>
+                    )}
+                    {previewData?.mimeType && (
+                      <TechBadge variant="info" size="sm">
+                        {previewData.mimeType.split("/").pop()?.toUpperCase()}
+                      </TechBadge>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Content */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.15 }}
+                className="overflow-auto flex-1"
+              >
+                {renderPreview()}
+              </motion.div>
+
+              {/* Footer */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="border-t border-border px-6 py-3 flex items-center justify-between bg-muted/20 shrink-0"
+              >
+                <div className="text-[10px] font-mono text-muted-foreground">
+                  FILE_ID: {fileId.slice(0, 12)}...
+                </div>
+                <div className="flex items-center gap-2">
+                  {previewData?.downloadUrl && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => window.open(previewData.downloadUrl, "_blank")}
+                      className="h-8 rounded-none font-mono text-xs"
+                    >
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      OPEN
+                    </Button>
+                  )}
+                  <Button
+                    size="sm"
+                    onClick={onDownload}
+                    className="h-8 rounded-none font-mono text-xs bg-[#00ff88] text-black hover:bg-[#00ff88]/90 shadow-[0_0_20px_rgba(0,255,136,0.3)]"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    DOWNLOAD
+                  </Button>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   );
 };
 
